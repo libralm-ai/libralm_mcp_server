@@ -1,5 +1,7 @@
 # LibraLM MCP Server
 
+[![smithery badge](https://smithery.ai/badge/@libralm-ai/libralm_mcp_server)](https://smithery.ai/server/@libralm-ai/libralm_mcp_server)
+
 Access 50+ book summaries and chapter breakdowns directly in Claude Desktop through the Model Context Protocol (MCP).
 
 <img width="1000" alt="LibraLM Demo" src="https://github.com/user-attachments/assets/demo-placeholder">
@@ -18,6 +20,14 @@ LibraLM MCP Server brings a library of AI-generated book summaries to your Claud
 - 🔐 **Secure API** - Protected access with API key authentication
 
 ## Installation
+
+### Installing via Smithery
+
+To install libralm_mcp_server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@libralm-ai/libralm_mcp_server):
+
+```bash
+npx -y @smithery/cli install @libralm-ai/libralm_mcp_server --client claude
+```
 
 ### Prerequisites
 
