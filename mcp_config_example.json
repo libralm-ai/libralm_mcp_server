@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+      "libralm": {
+        "command": "uvx",
+        "args": ["--from", "libralm-mcp-server", "libralm-mcp-server"],
+        "env": {
+            "LIBRALM_API_KEY": "your_api_key_here"
+        }
+      }
+    }
+  }

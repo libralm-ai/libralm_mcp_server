@@ -1,0 +1,45 @@
+[project]
+name = "libralm-mcp-server"
+version = "0.1.0"
+description = "MCP server for accessing LibraLM book summaries in Claude Desktop"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "LibraLM Team", email = "support@libralm.com"},
+]
+keywords = ["mcp", "claude", "books", "summaries", "ai", "llm"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "mcp>=0.1.0",
+    "pydantic>=2.0.0",
+    "requests>=2.25.0",
+]
+
+[project.urls]
+Homepage = "https://libralm.com"
+Repository = "https://github.com/libralm-ai/libralm_mcp_server"
+Issues = "https://github.com/libralm-ai/libralm_mcp_server/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+include = [
+    "libralm_mcp_server.py",
+    "README.md",
+    "LICENSE",
+    "requirements.txt",
+]
