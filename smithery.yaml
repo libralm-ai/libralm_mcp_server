@@ -1,0 +1,32 @@
+# Smithery configuration file: https://smithery.ai/docs/build/project-config
+
+startCommand:
+  type: stdio
+  commandFunction:
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
+    |-
+    (config) => ({
+      command: 'python',
+      args: ['libralm_mcp_server.py'],
+      env: {
+        LIBRALM_API_KEY: config.apiKey,
+        ...(config.apiUrl ? { LIBRALM_API_URL: config.apiUrl } : {})
+      }
+    })
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    required:
+      - apiKey
+    properties:
+      apiKey:
+        type: string
+        description: Your LibraLM API key
+      apiUrl:
+        type: string
+        default: https://yjv5auah93.execute-api.us-east-1.amazonaws.com/prod
+        description: Optional base URL for the LibraLM API service
+    description: Configuration for LibraLM MCP Server
+  exampleConfig:
+    apiKey: YOUR_LIBRALM_API_KEY
+    apiUrl: https://yjv5auah93.execute-api.us-east-1.amazonaws.com/prod
