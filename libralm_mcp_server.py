@@ -155,6 +155,9 @@ def get_book_info_resource(book_id: str) -> str:
         elif book_info.summary:
             info += "## Book Description\n\n"
             info += book_info.summary + "\n\n"
+            # Add note if description appears truncated
+            if book_info.summary.endswith("...") or book_info.summary.endswith("...</p>"):
+                info += "*Note: This is the complete description available. For the full book summary, use the get_book_summary tool.*\n\n"
 
         if (
             book_info.has_summary
@@ -163,11 +166,11 @@ def get_book_info_resource(book_id: str) -> str:
         ):
             info += "## Available Resources\n\n"
             if book_info.has_table_of_contents:
-                info += "- Table of contents with chapter descriptions\n"
+                info += "- Table of contents with chapter descriptions (use get_table_of_contents tool)\n"
             if book_info.has_summary:
-                info += "- Full book summary\n"
+                info += "- Full book summary (use get_book_summary tool)\n"
             if book_info.has_chapter_summaries:
-                info += "- Individual chapter summaries\n"
+                info += "- Individual chapter summaries (use get_chapter_summary tool)\n"
 
         return info
     except Exception as e:
