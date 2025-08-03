@@ -209,9 +209,14 @@ Using the available tools, analyze both books and provide:
 Consider the books' categories, authors, and publication dates in your analysis."""
 
 
-if __name__ == "__main__":
+def main():
+    """Main entry point for the LibraLM MCP server"""
     if not API_KEY:
         print("Warning: LIBRALM_API_KEY environment variable not set")
         print("Please set your API key: export LIBRALM_API_KEY=your-key-here")
-
+    
     mcp.run()
+
+
+if __name__ == "__main__":
+    main()

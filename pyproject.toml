@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "libralm-mcp-server"
-version = "0.1.1"
+version = "0.1.2"
 description = "LibraLM MCP Server - A Model Context Protocol server for searching and retrieving book information"
 readme = "README.md"
 requires-python = ">=3.10"
