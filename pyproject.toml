@@ -1,45 +1,45 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "libralm-mcp-server"
-version = "0.1.0"
-description = "MCP server for accessing LibraLM book summaries in Claude Desktop"
+version = "0.1.1"
+description = "LibraLM MCP Server - A Model Context Protocol server for searching and retrieving book information"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
-    {name = "LibraLM Team", email = "support@libralm.com"},
+    {name = "LibraLM", email = "support@libralm.com"}
 ]
-keywords = ["mcp", "claude", "books", "summaries", "ai", "llm"]
+keywords = ["mcp", "server", "libralm", "books", "library", "search"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
 dependencies = [
-    "mcp>=0.1.0",
-    "pydantic>=2.0.0",
-    "requests>=2.25.0",
+    "fastmcp>=2.11.0",
+    "mcp>=1.12.3",
+    "pydantic>=2.11.7",
+    "requests>=2.32.4",
 ]
 
 [project.urls]
-Homepage = "https://libralm.com"
+Homepage = "https://github.com/libralm-ai/libralm_mcp_server"
+Documentation = "https://github.com/libralm-ai/libralm_mcp_server#readme"
 Repository = "https://github.com/libralm-ai/libralm_mcp_server"
 Issues = "https://github.com/libralm-ai/libralm_mcp_server/issues"
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+[tool.hatch.build.targets.wheel]
+only-include = ["libralm_mcp_server.py"]
+sources = ["."]
 
-[tool.hatch.build]
-include = [
-    "libralm_mcp_server.py",
-    "README.md",
-    "LICENSE",
-    "requirements.txt",
-]
+[project.scripts]
+libralm-mcp-server = "libralm_mcp_server:main"
