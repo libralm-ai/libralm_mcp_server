@@ -1,20 +1,14 @@
 # Smithery configuration file: https://smithery.ai/docs/build/project-config
 
+runtime: "container"
+build:
+  dockerfile: "Dockerfile"           # Path to your Dockerfile
+  dockerBuildPath: "."               # Docker build context
+
 startCommand:
-  type: stdio
-  commandFunction:
-    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
-    |-
-    (config) => ({
-      command: 'python',
-      args: ['libralm_mcp_server.py'],
-      env: {
-        LIBRALM_API_KEY: config.apiKey,
-        ...(config.apiUrl ? { LIBRALM_API_URL: config.apiUrl } : {})
-      }
-    })
+  type: "http"
+  # Configuration schema defines what users need to provide
   configSchema:
-    # JSON Schema defining the configuration options for the MCP.
     type: object
     required:
       - apiKey
@@ -27,6 +21,7 @@ startCommand:
         default: https://yjv5auah93.execute-api.us-east-1.amazonaws.com/prod
         description: Optional base URL for the LibraLM API service
     description: Configuration for LibraLM MCP Server
+  # Example configuration for users
   exampleConfig:
     apiKey: YOUR_LIBRALM_API_KEY
     apiUrl: https://yjv5auah93.execute-api.us-east-1.amazonaws.com/prod

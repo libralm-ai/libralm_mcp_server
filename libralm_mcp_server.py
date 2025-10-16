@@ -9,19 +9,76 @@ from the LibraLM API service.
 import json
 import os
 from typing import List, Optional
+import contextvars
 
 import requests
+import uvicorn
 from mcp.server.fastmcp import FastMCP
+from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from middleware import SmitheryConfigMiddleware
 
 # Initialize the MCP server
 mcp = FastMCP("Libralm Book Server")
 
-# API Configuration
+# API Configuration - Global defaults for STDIO mode
 API_BASE_URL = os.environ.get(
     "LIBRALM_API_URL", "https://yjv5auah93.execute-api.us-east-1.amazonaws.com/prod"
 )
 API_KEY = os.environ.get("LIBRALM_API_KEY", "")
+
+# Store config for STDIO mode (backwards compatibility)
+_stdio_config = {}
+
+
+def handle_config(config: dict):
+    """Handle configuration from Smithery - for backwards compatibility with stdio mode."""
+    global _stdio_config
+    _stdio_config = config
+
+
+def get_request_config() -> dict:
+    """Get full config from current request context."""
+    try:
+        # Try to get from request context if available (HTTP mode)
+        import contextvars
+
+        request = contextvars.copy_context().get('request')
+        if hasattr(request, 'scope') and request.scope:
+            return request.scope.get('smithery_config', {})
+    except:
+        pass
+
+    # Fall back to STDIO config
+    return _stdio_config
+
+
+def get_config_value(key: str, default=None):
+    """Get a specific config value from current request."""
+    config = get_request_config()
+    return config.get(key, default)
+
+
+def get_api_key() -> str:
+    """Get API key from request config or environment."""
+    # Try to get from request config first (HTTP mode)
+    api_key = get_config_value("apiKey")
+    if api_key:
+        return api_key
+
+    # Fall back to environment variable (STDIO mode)
+    return API_KEY
+
+
+def get_api_base_url() -> str:
+    """Get API base URL from request config or environment."""
+    # Try to get from request config first (HTTP mode)
+    api_url = get_config_value("apiUrl")
+    if api_url:
+        return api_url
+
+    # Fall back to environment variable or default
+    return API_BASE_URL
 
 
 class BookInfo(BaseModel):
@@ -43,9 +100,13 @@ class BookInfo(BaseModel):
 
 def _make_api_request(endpoint: str) -> dict:
     """Make an authenticated request to the LibraLM API"""
-    headers = {"x-api-key": API_KEY, "Content-Type": "application/json"}
+    # Get API key and base URL from request context or environment
+    api_key = get_api_key()
+    base_url = get_api_base_url()
 
-    url = f"{API_BASE_URL}{endpoint}"
+    headers = {"x-api-key": api_key, "Content-Type": "application/json"}
+
+    url = f"{base_url}{endpoint}"
     response = requests.get(url, headers=headers)
 
     if response.status_code == 401:
@@ -211,11 +272,55 @@ Consider the books' categories, authors, and publication dates in your analysis.
 
 def main():
     """Main entry point for the LibraLM MCP server"""
-    if not API_KEY:
-        print("Warning: LIBRALM_API_KEY environment variable not set")
-        print("Please set your API key: export LIBRALM_API_KEY=your-key-here")
-    
-    mcp.run()
+    transport_mode = os.getenv("TRANSPORT", "stdio")
+
+    if transport_mode == "http":
+        # HTTP mode with config extraction from URL parameters
+        print("LibraLM MCP Server starting in HTTP mode...")
+
+        # Setup Starlette app with CORS for cross-origin requests
+        app = mcp.streamable_http_app()
+
+        # IMPORTANT: add CORS middleware for browser based clients
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["*"],
+            allow_credentials=True,
+            allow_methods=["GET", "POST", "OPTIONS"],
+            allow_headers=["*"],
+            expose_headers=["mcp-session-id", "mcp-protocol-version"],
+            max_age=86400,
+        )
+
+        # Apply custom middleware for config extraction (per-request API key handling)
+        app = SmitheryConfigMiddleware(app)
+
+        # Use Smithery-required PORT environment variable
+        port = int(os.environ.get("PORT", 8081))
+        print(f"Listening on port {port}")
+
+        uvicorn.run(app, host="0.0.0.0", port=port, log_level="debug")
+
+    else:
+        # STDIO mode for backwards compatibility
+        print("LibraLM MCP Server starting in STDIO mode...")
+
+        # Load config from environment for STDIO mode
+        api_key = os.getenv("LIBRALM_API_KEY", "")
+        api_url = os.getenv("LIBRALM_API_URL")
+
+        if not api_key:
+            print("Warning: LIBRALM_API_KEY environment variable not set")
+            print("Please set your API key: export LIBRALM_API_KEY=your-key-here")
+
+        # Set the config for stdio mode
+        config = {"apiKey": api_key}
+        if api_url:
+            config["apiUrl"] = api_url
+        handle_config(config)
+
+        # Run with stdio transport (default)
+        mcp.run()
 
 
 if __name__ == "__main__":

@@ -29,6 +29,8 @@ dependencies = [
     "mcp>=1.12.3",
     "pydantic>=2.11.7",
     "requests>=2.32.4",
+    "uvicorn>=0.34.0",
+    "smithery>=0.1.0",
 ]
 
 [project.urls]
@@ -38,7 +40,7 @@ Repository = "https://github.com/libralm-ai/libralm_mcp_server"
 Issues = "https://github.com/libralm-ai/libralm_mcp_server/issues"
 
 [tool.hatch.build.targets.wheel]
-only-include = ["libralm_mcp_server.py"]
+only-include = ["libralm_mcp_server.py", "middleware.py"]
 sources = ["."]
 
 [project.scripts]
