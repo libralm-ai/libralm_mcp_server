@@ -23,10 +23,10 @@ LibraLM MCP Server brings a library of AI-generated book summaries to your Claud
 
 ### Installing via Smithery
 
-To install libralm_mcp_server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@libralm-ai/libralm_mcp_server):
+To install libralm_mcp_server automatically via [Smithery](https://smithery.ai/server/@libralm-ai/libralm_mcp_server):
 
 ```bash
-npx -y @smithery/cli install @libralm-ai/libralm_mcp_server --client claude
+npx -y @smithery/cli install @libralm-ai/libralm_mcp_server
 ```
 
 ### Prerequisites
