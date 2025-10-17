@@ -9,14 +9,13 @@ from the LibraLM API service.
 import json
 import os
 from typing import List, Optional
-import contextvars
 
 import requests
 import uvicorn
 from mcp.server.fastmcp import FastMCP
 from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from middleware import SmitheryConfigMiddleware
+from middleware import SmitheryConfigMiddleware, get_current_request_config
 
 # Initialize the MCP server
 mcp = FastMCP("Libralm Book Server")
@@ -39,17 +38,17 @@ def handle_config(config: dict):
 
 def get_request_config() -> dict:
     """Get full config from current request context."""
+    # Try to get from HTTP request context first (via middleware)
     try:
-        # Try to get from request context if available (HTTP mode)
-        import contextvars
-
-        request = contextvars.copy_context().get('request')
-        if hasattr(request, 'scope') and request.scope:
-            return request.scope.get('smithery_config', {})
+        http_config = get_current_request_config()
+        if http_config:
+            print(f"DEBUG: Using HTTP request config: {http_config}")
+            return http_config
     except:
         pass
 
     # Fall back to STDIO config
+    print(f"DEBUG: Using STDIO config: {_stdio_config}")
     return _stdio_config
 
 
@@ -63,11 +62,14 @@ def get_api_key() -> str:
     """Get API key from request config or environment."""
     # Try to get from request config first (HTTP mode)
     api_key = get_config_value("apiKey")
+    print(f"DEBUG get_api_key: from config = '{api_key}'")
     if api_key:
         return api_key
 
     # Fall back to environment variable (STDIO mode)
-    return API_KEY
+    env_key = API_KEY
+    print(f"DEBUG get_api_key: from env = '{env_key}'")
+    return env_key
 
 
 def get_api_base_url() -> str:
@@ -129,16 +131,28 @@ def _make_api_request(endpoint: str) -> dict:
 def list_books() -> List[BookInfo]:
     """List all available books with their basic information"""
     try:
+        # Debug: Check what API key and URL we're using
+        api_key = get_api_key()
+        api_url = get_api_base_url()
+        print(f"DEBUG: Using API URL: {api_url}")
+        print(f"DEBUG: API key present: {bool(api_key)}, length: {len(api_key) if api_key else 0}")
+
         data = _make_api_request("/books")
+        print(f"DEBUG: Received data: {data}")
+
         books = []
 
         for book_data in data.get("books", []):
             books.append(BookInfo(**book_data))
 
+        print(f"DEBUG: Returning {len(books)} books")
         return sorted(books, key=lambda x: x.title)
     except Exception as e:
-        print(f"Error listing books: {str(e)}")
-        return []
+        print(f"ERROR listing books: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        # Raise the error instead of silently returning empty list
+        raise ValueError(f"Error listing books: {str(e)}")
 
 
 @mcp.tool()
