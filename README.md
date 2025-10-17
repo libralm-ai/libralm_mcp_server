@@ -12,7 +12,7 @@ LibraLM MCP Server brings a library of AI-generated book summaries to your Claud
 
 ## Features
 
-- 📚 **500+ Book Summaries** - Access a growing library of professionally summarized books
+- 📚 **50+ Book Summaries** - Access a growing library of professionally summarized books
 - 🔍 **Smart Search** - Find books by title, author, or ISBN
 - 📖 **Chapter Breakdowns** - Get detailed summaries of individual chapters
 - 📋 **Table of Contents** - View complete book structure with chapter descriptions
