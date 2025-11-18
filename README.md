@@ -6,6 +6,10 @@ Access 50+ book summaries and chapter breakdowns directly in Claude Desktop thro
 
 <img width="1000" alt="LibraLM Demo" src="https://github.com/user-attachments/assets/demo-placeholder">
 
+<a href="https://glama.ai/mcp/servers/@libralm-ai/libralm_mcp_server">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@libralm-ai/libralm_mcp_server/badge" alt="LibraLM Server MCP server" />
+</a>
+
 ## Overview
 
 LibraLM MCP Server brings a library of AI-generated book summaries to your Claude Desktop conversations. Search for books, read comprehensive summaries, explore chapter-by-chapter breakdowns, and get instant access to key insights from business, self-help, and educational books.
