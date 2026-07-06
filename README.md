@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/libralm-ai-libralm-mcp-server-badge.png)](https://mseep.ai/app/libralm-ai-libralm-mcp-server)
+
 # LibraLM MCP Server
 
 [![smithery badge](https://smithery.ai/badge/@libralm-ai/libralm_mcp_server)](https://smithery.ai/server/@libralm-ai/libralm_mcp_server)
