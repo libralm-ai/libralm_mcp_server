@@ -1,6 +1,6 @@
 # LibraLM MCP Server
 
-[![smithery badge](https://smithery.ai/badge/@libralm-ai/libralm_mcp_server)](https://smithery.ai/server/@libralm-ai/libralm_mcp_server)
+[![LightNow capabilities](https://lightnow.ai/badge/io.github.libralm-ai/libralm_mcp_server)](https://lightnow.ai/servers/io.github.libralm-ai/libralm_mcp_server)
 
 Access 50+ book summaries and chapter breakdowns directly in Claude Desktop through the Model Context Protocol (MCP).
 
